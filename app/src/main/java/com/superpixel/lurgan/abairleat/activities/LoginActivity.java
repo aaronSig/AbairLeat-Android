@@ -11,10 +11,12 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.firebase.client.FirebaseError;
 import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.AuthStatus;
 import com.superpixel.lurgan.abairleat.dto.ProfileDTO;
+import com.superpixel.lurgan.abairleat.services.FriendsService;
 import com.superpixel.lurgan.abairleat.services.ProfileService;
 
 import org.androidannotations.annotations.AfterInject;
@@ -28,6 +30,8 @@ import de.greenrobot.event.EventBus;
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity implements FacebookCallback<LoginResult> {
 
+    private static final String LOG_TAG = "LoginActivity";
+
     @ViewById(R.id.login_button)
     protected LoginButton facebookLoginButton;
 
@@ -36,6 +40,8 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
     @Bean
     protected ProfileService profileService;
     @Bean
+    protected FriendsService friendsService;
+    @Bean
     protected API api;
 
     @Override
@@ -43,8 +49,6 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
         super.onCreate(savedInstanceState);
 
         EventBus.getDefault().register(this);
-
-        initFacebook();
     }
 
 
@@ -64,10 +68,7 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
 
     @AfterInject
     protected void afterInject() {
-        if(profileService.isAuthenticated()) {
-            DashboardActivity_.intent(this).start();
-            finish();
-        }
+        initFacebook();
     }
 
     @AfterViews
@@ -78,7 +79,7 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
 
     public void onEvent(ProfileDTO profile) {
         if(profileService.isAuthenticated()) {
-            DashboardActivity_.intent(this).start();
+            loginComplete();
         } else {
             log(Log.ERROR, "not logged in");
         }
@@ -88,9 +89,39 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
 
     }
 
+    private void checkLogin() {
+        if(profileService.isAuthenticated()) {
+            loginComplete();
+        }
+    }
+
+    private void loginComplete() {
+        friendsService.sync();
+        api.loadProfile(new API.InitializationCallback() {
+            @Override
+            public void onInitializationCompleted(ProfileDTO profile) {
+                DashboardActivity_.intent(LoginActivity.this).start();
+                finish();
+            }
+
+            @Override
+            public void onInitializationFailed(FirebaseError firebaseError) {
+                Log.e(LOG_TAG, firebaseError.toString());
+            }
+        });
+    }
+
     private void initFacebook() {
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        FacebookSdk.sdkInitialize(this.getApplicationContext(), new FacebookSdk.InitializeCallback() {
+            @Override
+            public void onInitialized() {
+                checkLogin();
+            }
+        });
+
         callbackManager = CallbackManager.Factory.create();
+
+        Log.d(LOG_TAG, "FB SDK initialized");
     }
 
     /*

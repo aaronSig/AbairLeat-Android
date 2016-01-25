@@ -4,26 +4,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Martin on 1/21/16.
  */
-public class ProfileDTO {
+//@JsonIgnoreProperties(ignoreUnknown=true)
+public class ProfileDTO extends FirebaseDTO {
     private String id;
     private String name;
     private String firstName;
     private String lastName;
-    private String avatarUrl;
+    private String avatarUrlString;
 
     public ProfileDTO() {}
 
-    public ProfileDTO(String id, String name, String firstName, String lastName, String avatarUrl) {
+    public ProfileDTO(String id, String name, String firstName, String lastName, String avatarUrlString) {
         this.id = id;
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.avatarUrl = avatarUrl;
+        this.avatarUrlString = avatarUrlString;
     }
 
     public String getId() {
@@ -58,28 +58,31 @@ public class ProfileDTO {
         this.lastName = lastName;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatarUrlString() {
+        return avatarUrlString;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatarUrlString(String avatarUrlString) {
+        this.avatarUrlString = avatarUrlString;
     }
 
-
-    public Map<String, Object> toMap() {
+    @Override
+    public HashMap<String, Object> toMap() {
         HashMap<String, Object> vals = new HashMap<>(5);
 
         vals.put("id", getId());
         vals.put("name", getName());
         vals.put("firstName", getFirstName());
         vals.put("lastName", getLastName());
-        vals.put("avatarUrlString", getAvatarUrl());
+        vals.put("avatarUrlString", getAvatarUrlString());
 
         return vals;
     }
 
+
     public static ProfileDTO fromFacebookProfile(JSONObject profile) {
+        if(profile == null) return null;
+
         return new ProfileDTO(
                 getStringNullSafe(profile, "id"),
                 getStringNullSafe(profile, "name"),
@@ -108,5 +111,16 @@ public class ProfileDTO {
         }
 
         return "";
+    }
+
+    @Override
+    public String toString() {
+        return "ProfileDTO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", avatarUrlString='" + avatarUrlString + '\'' +
+                '}';
     }
 }

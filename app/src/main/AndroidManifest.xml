@@ -27,7 +27,9 @@
         </activity>
 
         <activity android:name=".activities.DashboardActivity_">
+        </activity>
 
+        <activity android:name=".activities.ConversationActivity_">
         </activity>
 
         <activity

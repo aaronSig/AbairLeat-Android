@@ -72,23 +72,25 @@ public class ProfileService implements Firebase.AuthStateListener, Firebase.Auth
 
     private void attachProfileChangedListener(AuthData auth) {
         if(profileListenerAttached == false) {
-            api.firebaseForUser(auth.getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ProfileDTO profile = dataSnapshot.getValue(ProfileDTO.class);
-                    notifyProfileStateChange(profile);
-                }
+            api.firebaseForUser(auth.getUid()).addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            ProfileDTO profile = dataSnapshot.getValue(ProfileDTO.class);
+                            notifyProfileStateChange(profile);
+                        }
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
 
-                }
-            });
+                        }
+                    }
+            );
             profileListenerAttached = true;
         }
     }
 
-    private void graphRequest(final AuthData authData) {
+    private void profileGraphRequest(final AuthData authData) {
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -108,10 +110,8 @@ public class ProfileService implements Firebase.AuthStateListener, Firebase.Auth
     }
 
     private void storeProfile(final ProfileDTO profile, final AuthData authData) {
-        Firebase firebaseUserRef = api.firebaseForUser(profile.getId());
-
-        firebaseUserRef.updateChildren(
-                profile.toMap(),
+        api.updateProfile(
+                profile,
                 new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -159,7 +159,7 @@ public class ProfileService implements Firebase.AuthStateListener, Firebase.Auth
      */
     @Override
     public void onAuthenticated(AuthData authData) {
-        graphRequest(authData);
+        profileGraphRequest(authData);
 //        notifyAuthStatusChange(new AuthStatus(authData));
     }
 

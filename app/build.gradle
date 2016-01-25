@@ -29,6 +29,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile 'com.android.support:appcompat-v7:23.+'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
 
     // android annotations
     apt ('org.androidannotations:androidannotations:4.0-SNAPSHOT')
@@ -38,6 +39,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.+'
 
     compile 'de.greenrobot:eventbus:2.4.0'
+
+    compile 'com.github.bumptech.glide:glide:3.6.1'
 }
 
 repositories {
