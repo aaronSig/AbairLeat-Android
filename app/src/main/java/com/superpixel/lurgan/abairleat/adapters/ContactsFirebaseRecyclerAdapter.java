@@ -3,8 +3,13 @@ package com.superpixel.lurgan.abairleat.adapters;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.superpixel.lurgan.abairleat.api.API;
+import com.superpixel.lurgan.abairleat.dto.ProfileDTO;
+import com.superpixel.lurgan.abairleat.util.ProfileCache;
 import com.superpixel.lurgan.abairleat.util.ViewWrapper;
 import com.superpixel.lurgan.abairleat.views.ContactsElementView;
 import com.superpixel.lurgan.abairleat.views.ContactsElementView_;

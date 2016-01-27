@@ -103,7 +103,7 @@ public class ProfileService implements Firebase.AuthStateListener, Firebase.Auth
         );
 
         Bundle params = new Bundle();
-        params.putString("fields", "name,first_name,last_name,picture");
+        params.putString("fields", "name,first_name,last_name,picture.width(500)");
 
         request.setParameters(params);
         request.executeAsync();

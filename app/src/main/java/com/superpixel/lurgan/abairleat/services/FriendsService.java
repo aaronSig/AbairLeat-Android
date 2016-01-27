@@ -21,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Martin on 1/25/16.
  */
@@ -57,7 +60,7 @@ public class FriendsService {
         );
 
         Bundle params = new Bundle();
-        params.putString("fields", "name,first_name,last_name,picture");
+        params.putString("fields", "name,first_name,last_name,picture.width(500)");
 
         request.setParameters(params);
         request.setGraphPath("/me/friends");

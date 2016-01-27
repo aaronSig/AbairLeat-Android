@@ -1,5 +1,7 @@
 package com.superpixel.lurgan.abairleat.dto;
 
+import com.superpixel.lurgan.abairleat.api.API;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +127,7 @@ public class ConversationMetadataDTO extends FirebaseDTO {
     public HashMap<String, Object> generateProfileMetaLinkMap() {
         HashMap<String, Object> map = new HashMap<>(1);
 
-        map.put(getConversationId(), true);
+        map.put(API.linkify(this), true);
 
         return map;
     }

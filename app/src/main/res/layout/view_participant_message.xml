@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+>
+    <ImageView
+        android:id="@+id/profile_image"
+
+        style="@style/ParticipantMessageView.Image"
+
+        android:layout_alignParentRight="true"
+    />
+
+    <TextView
+        android:id="@+id/message"
+
+        style="@style/ParticipantMessageView.Text"
+
+        android:layout_toLeftOf="@id/profile_image"
+    />
+
+    <TextView
+        android:id="@+id/date"
+
+        style="@style/OwnerMessageView.Date"
+
+        android:layout_alignRight="@id/message"
+        android:layout_below="@id/message"
+    />
+</merge>

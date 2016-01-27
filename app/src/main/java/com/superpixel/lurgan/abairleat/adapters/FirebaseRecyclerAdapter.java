@@ -16,13 +16,17 @@ import java.util.ArrayList;
 
 /**
  * Created by Martin on 1/25/16.
+ *
+ * Based on:
+ * https://github.com/mmazzarolo/firebase-recyclerview/blob/master/app/src/main/java/com/example/matteo/firebase_recycleview/FirebaseRecyclerAdapter.java
+ *
  */
 public abstract class FirebaseRecyclerAdapter<T, V extends View> extends RecyclerView.Adapter<ViewWrapper<V>> {
 
-    private Query mQuery;
-    private Class<T> mItemClass;
-    private ArrayList<T> mItems;
-    private ArrayList<String> mKeys;
+    private Query query;
+    private Class<T> elementClass;
+    private ArrayList<T> elements;
+    private ArrayList<String> keys;
 
     /**
      * @param query     The Firebase location to watch for data changes.
@@ -49,39 +53,39 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      *                  Be careful: items must be coherent with this list.
      */
     public void bind(Query query, Class<T> itemClass, @Nullable ArrayList<T> items, @Nullable ArrayList<String> keys) {
-        this.mQuery = query;
+        this.query = query;
         if (items != null && keys != null) {
-            this.mItems = items;
-            this.mKeys = keys;
+            this.elements = items;
+            this.keys = keys;
         } else {
-            mItems = new ArrayList<T>();
-            mKeys = new ArrayList<String>();
+            elements = new ArrayList<T>();
+            this.keys = new ArrayList<String>();
         }
-        this.mItemClass = itemClass;
-        query.addChildEventListener(mListener);
+        this.elementClass = itemClass;
+        query.addChildEventListener(eventListener);
     }
 
-    private ChildEventListener mListener = new ChildEventListener() {
+    private ChildEventListener eventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
             String key = dataSnapshot.getKey();
 
-            if (!mKeys.contains(key)) {
-                T item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mItemClass);
+            if (!keys.contains(key)) {
+                T item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.elementClass);
                 int insertedPosition;
                 if (previousChildName == null) {
-                    mItems.add(0, item);
-                    mKeys.add(0, key);
+                    elements.add(0, item);
+                    keys.add(0, key);
                     insertedPosition = 0;
                 } else {
-                    int previousIndex = mKeys.indexOf(previousChildName);
+                    int previousIndex = keys.indexOf(previousChildName);
                     int nextIndex = previousIndex + 1;
-                    if (nextIndex == mItems.size()) {
-                        mItems.add(item);
-                        mKeys.add(key);
+                    if (nextIndex == elements.size()) {
+                        elements.add(item);
+                        keys.add(key);
                     } else {
-                        mItems.add(nextIndex, item);
-                        mKeys.add(nextIndex, key);
+                        elements.add(nextIndex, item);
+                        keys.add(nextIndex, key);
                     }
                     insertedPosition = nextIndex;
                 }
@@ -94,12 +98,12 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             String key = dataSnapshot.getKey();
 
-            if (mKeys.contains(key)) {
-                int index = mKeys.indexOf(key);
-                T oldItem = mItems.get(index);
-                T newItem = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mItemClass);
+            if (keys.contains(key)) {
+                int index = keys.indexOf(key);
+                T oldItem = elements.get(index);
+                T newItem = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.elementClass);
 
-                mItems.set(index, newItem);
+                elements.set(index, newItem);
 
                 notifyItemChanged(index);
                 itemChanged(oldItem, newItem, key, index);
@@ -110,12 +114,12 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
 
-            if (mKeys.contains(key)) {
-                int index = mKeys.indexOf(key);
-                T item = mItems.get(index);
+            if (keys.contains(key)) {
+                int index = keys.indexOf(key);
+                T item = elements.get(index);
 
-                mKeys.remove(index);
-                mItems.remove(index);
+                keys.remove(index);
+                elements.remove(index);
 
                 notifyItemRemoved(index);
                 itemRemoved(item, key, index);
@@ -126,24 +130,24 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
         public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
             String key = dataSnapshot.getKey();
 
-            int index = mKeys.indexOf(key);
-            T item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mItemClass);
-            mItems.remove(index);
-            mKeys.remove(index);
+            int index = keys.indexOf(key);
+            T item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.elementClass);
+            elements.remove(index);
+            keys.remove(index);
             int newPosition;
             if (previousChildName == null) {
-                mItems.add(0, item);
-                mKeys.add(0, key);
+                elements.add(0, item);
+                keys.add(0, key);
                 newPosition = 0;
             } else {
-                int previousIndex = mKeys.indexOf(previousChildName);
+                int previousIndex = keys.indexOf(previousChildName);
                 int nextIndex = previousIndex + 1;
-                if (nextIndex == mItems.size()) {
-                    mItems.add(item);
-                    mKeys.add(key);
+                if (nextIndex == elements.size()) {
+                    elements.add(item);
+                    keys.add(key);
                 } else {
-                    mItems.add(nextIndex, item);
-                    mKeys.add(nextIndex, key);
+                    elements.add(nextIndex, item);
+                    keys.add(nextIndex, key);
                 }
                 newPosition = nextIndex;
             }
@@ -167,7 +171,7 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
 
     @Override
     public int getItemCount() {
-        return (mItems != null) ? mItems.size() : 0;
+        return (elements != null) ? elements.size() : 0;
     }
 
     /**
@@ -175,7 +179,7 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      * ALWAYS call this method before destroying the adapter to remove the listener.
      */
     public void destroy() {
-        mQuery.removeEventListener(mListener);
+        query.removeEventListener(eventListener);
     }
 
     /**
@@ -187,7 +191,7 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      * @return the list of items of the adapter
      */
     public ArrayList<T> getItems() {
-        return mItems;
+        return elements;
     }
 
     /**
@@ -199,11 +203,11 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      * @return the list of keys of the items of the adapter
      */
     public ArrayList<String> getKeys() {
-        return mKeys;
+        return keys;
     }
 
     public String getKey(int position) {
-        return mKeys.get(position);
+        return keys.get(position);
     }
 
     /**
@@ -213,7 +217,7 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      * @return the item
      */
     public T getItem(int position) {
-        return mItems.get(position);
+        return elements.get(position);
     }
 
     /**
@@ -223,7 +227,7 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      * @return the position in the adapter if found, -1 otherwise
      */
     public int getPositionForItem(T item) {
-        return mItems != null && mItems.size() > 0 ? mItems.indexOf(item) : -1;
+        return elements != null && elements.size() > 0 ? elements.indexOf(item) : -1;
     }
 
     /**
@@ -233,7 +237,7 @@ public abstract class FirebaseRecyclerAdapter<T, V extends View> extends Recycle
      * @return true if the item is in the adapter, false otherwise
      */
     public boolean contains(T item) {
-        return mItems != null && mItems.contains(item);
+        return elements != null && elements.contains(item);
     }
 
     /**

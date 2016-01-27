@@ -3,15 +3,19 @@ package com.superpixel.lurgan.abairleat.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.superpixel.lurgan.abairleat.dto.ConversationMetadataDTO;
 import com.superpixel.lurgan.abairleat.dto.ProfileDTO;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+
+import java.util.Arrays;
 
 /**
  * Created by Martin on 1/21/16.
@@ -130,12 +134,16 @@ public class API {
 
     public String getAuthenticatedUserToken() {
         try {
-            return firebaseVersioned().getAuth().getProviderData().get("id").toString();
+            return getAuthData().getProviderData().get("id").toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    public AuthData getAuthData() {
+        return firebaseVersioned().getAuth();
     }
 
     /*
@@ -149,6 +157,7 @@ public class API {
      * @param listener Firebase completion listener
      */
     public void updateProfile(ProfileDTO profile, Firebase.CompletionListener listener) {
+        // TODO: 1/26/16 since we're requesting a larger profile picture on android but not on iOS save it in a separate field - large image url
         firebaseForUser(profile.getId()).updateChildren(profile.toMap(), listener);
     }
 
@@ -179,15 +188,13 @@ public class API {
      * @return formatted conversation ID
      */
     public String getConversationId(ProfileDTO user) {
-        long participantId = Long.valueOf(user.getId());
-        long myId = Long.valueOf(profile.getId());
-
-        long largerId = Math.max(participantId, myId);
-        long smallerId = Math.min(participantId, myId);
-
-        return String.format("1x%s-%s", largerId, smallerId);
+        return generateConversationIds(user.getId(), profile.getId());
     }
 
+    public String generateConversationIds(String... ids) {
+        Arrays.sort(ids);
+        return String.format("%sx%s-%s", ids.length - 1, ids[0], ids[1]);
+    }
 
     /*
      * API CONFIG VARIABLES
@@ -207,6 +214,13 @@ public class API {
      */
     public static String linkify(ProfileDTO profile) {
         return String.format("@link>profiles>%s", profile.getId());
+    }
+
+    public static String linkify(ConversationMetadataDTO conversationMeta) {
+        return String.format(
+                "@link>conversations>%s>metadata",
+                conversationMeta.getConversationId()
+        );
     }
 
 

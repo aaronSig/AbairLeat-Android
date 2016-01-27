@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+>
+    <LinearLayout
+        android:orientation="vertical"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    >
+        <RelativeLayout
+            style="@style/ProfileView.ProfileImage"
+        >
+            <ImageView
+                android:id="@+id/profile_image"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                tools:background="@color/colorAccent"
+            />
+
+            <TextView
+                android:id="@+id/name"
+
+                style="@style/ProfileView.Name"
+
+                tools:text="Martin Sonc"
+            />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/ProfileView.Card"
+        >
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+                <TextView
+                    style="@style/ProfileView.StatusLabel"
+
+                    android:text="@string/status"
+                />
+
+                <TextView
+                    android:id="@+id/status"
+
+                    style="@style/ProfileView.Status"
+
+                    tools:text="@string/connected"
+                />
+            </FrameLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/ProfileView.Card"
+        >
+            <LinearLayout
+                android:orientation="vertical"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+
+                <TextView
+                    style="@style/ProfileView.Element.Title"
+
+                    android:text="@string/my_details"
+                />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:paddingBottom="8dp"
+                >
+                    <TextView
+                        style="@style/ProfileView.Element.Label"
+
+                        android:text="@string/id"
+                    />
+
+                    <TextView
+                        android:id="@+id/id"
+
+                        style="@style/ProfileView.Element.Value"
+
+                        tools:text="10153892147644241"
+                    />
+                </FrameLayout>
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                >
+                    <TextView
+                        style="@style/ProfileView.Element.Label"
+
+                        android:text="@string/provider"
+                    />
+
+                    <TextView
+                        android:id="@+id/provider"
+
+                        style="@style/ProfileView.Element.Value"
+
+                        tools:text="facebook"
+                    />
+                </FrameLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <Button
+            android:id="@+id/logout"
+
+            style="@style/ProfileView.Element.Button"
+
+            android:text="@string/log_out"
+        />
+
+    </LinearLayout>
+</merge>

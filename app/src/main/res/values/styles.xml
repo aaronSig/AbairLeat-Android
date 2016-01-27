@@ -1,11 +1,245 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <!--
+        ProfileView
+    -->
+
+    <style name="ProfileView"></style>
+
+    <style name="ProfileView.ProfileImage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">200dp</item>
+
+    </style>
+
+    <style name="ProfileView.Name">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <item name="android:gravity">left|bottom</item>
+
+        <item name="android:layout_marginLeft">@dimen/ProfileView.Content.HorizontalMargin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+
+        <item name="android:textSize">30dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ProfileView.Card">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+
+        <item name="contentPaddingLeft">16dp</item>
+        <item name="contentPaddingTop">16dp</item>
+        <item name="contentPaddingRight">16dp</item>
+        <item name="contentPaddingBottom">16dp</item>
+    </style>
+
+    <style name="ProfileView.StatusLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:gravity">center_vertical|left</item>
+    </style>
+
+    <style name="ProfileView.Status">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:gravity">center_vertical|right</item>
+    </style>
+
+    <style name="ProfileView.Element">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="ProfileView.Element.Title">
+        <item name="android:paddingBottom">16dp</item>
+
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="ProfileView.Element.Button">
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="ProfileView.Element.Value">
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="ProfileView.Element.Label">
+        <item name="android:gravity">left</item>
+    </style>
+
+    <!--
+        ContactsElementView
+    -->
+    <style name="ContactsElementView"></style>
+
+    <style name="ContactsElementView.Card">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">150dp</item>
+
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+    </style>
+
+    <style name="ContactsElementView.Image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="ContactsElementView.Name">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+
+        <item name="android:gravity">center</item>
+
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <!--
+        ConversationActivity
+    -->
+    <style name="ConversationActivity"></style>
+    <style name="ConversationActivity.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ConversationActivity.SendButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+
+        <item name="android:text">@string/send</item>
+    </style>
+
+    <style name="ConversationActivity.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+
+        <item name="android:hint">@string/new_message</item>
+    </style>
+
+    <style name="ConversationActivity.MessageList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+
+    </style>
+
+    <!--
+        OwnerMessageView
+    -->
+    <style name="OwnerMessageView"></style>
+
+    <style name="OwnerMessageView.Image">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="OwnerMessageView.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:minHeight">40dp</item>
+
+        <item name="android:background">@drawable/bubble_left</item>
+
+        <item name="android:gravity">center_vertical</item>
+
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+
+    <style name="OwnerMessageView.Date">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+
+        <item name="android:textSize">6dp</item>
+    </style>
+
+    <!--
+        ParticipantMessageView
+    -->
+    <style name="ParticipantMessageView"></style>
+
+    <style name="ParticipantMessageView.Image" parent="@style/OwnerMessageView.Image">
+
+    </style>
+
+    <style name="ParticipantMessageView.Text" parent="@style/OwnerMessageView.Text">
+        <item name="android:background">@drawable/bubble_right</item>
+
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">24dp</item>
+    </style>
+
+    <style name="ParticipantMessageView.Date" parent="@style/OwnerMessageView.Date">
+        <item name="android:gravity">right</item>
     </style>
 
 </resources>

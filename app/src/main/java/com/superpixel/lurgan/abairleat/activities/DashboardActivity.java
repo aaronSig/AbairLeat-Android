@@ -1,15 +1,16 @@
 package com.superpixel.lurgan.abairleat.activities;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 
 import com.superpixel.lurgan.abairleat.R;
-import com.superpixel.lurgan.abairleat.adapters.ContactsFirebaseRecyclerAdapter;
-import com.superpixel.lurgan.abairleat.services.ProfileService;
+import com.superpixel.lurgan.abairleat.adapters.DashboardPagerAdapter;
+import com.superpixel.lurgan.abairleat.api.API;
+import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -18,32 +19,40 @@ import org.androidannotations.annotations.ViewById;
  */
 @EActivity(R.layout.activity_dashboard)
 public class DashboardActivity extends BaseActivity {
+
     private static final String LOG_TAG = "DashboardActivity";
 
     @Bean
-    protected ProfileService profileService;
+    protected DashboardPagerAdapter dashboardPagerAdapter;
     @Bean
-    protected ContactsFirebaseRecyclerAdapter contactsAdapter;
+    protected API api;
 
-    @ViewById(R.id.contacts)
-    protected RecyclerView contactsView;
-
+    @ViewById(R.id.toolbar)
+    protected Toolbar toolbarView;
+    @ViewById(R.id.tabs)
+    protected TabLayout tabLayoutView;
+    @ViewById(R.id.pager)
+    protected ViewPager viewPager;
 
     @AfterViews
     protected void afterViews() {
+        toolbarSetup();
+        contentSetup();
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        contactsView.setLayoutManager(layoutManager);
-        contactsView.setAdapter(contactsAdapter);
+        ProfileCache.init(api);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
-    @Click(R.id.logout)
-    protected void onLogoutClicked() {
-        profileService.logout();
-        LoginActivity_.intent(this).start();
-        finish();
+    private void toolbarSetup() {
+        setSupportActionBar(toolbarView);
+    }
+
+    private void contentSetup() {
+        viewPager.setAdapter(dashboardPagerAdapter);
+        tabLayoutView.setupWithViewPager(viewPager);
     }
 }

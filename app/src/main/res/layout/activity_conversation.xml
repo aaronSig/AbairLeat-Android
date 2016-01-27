@@ -5,32 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 >
-    <TextView
-        android:id="@+id/conversation_id"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Toolbar"
+    >
+        <TextView
+            android:id="@+id/title"
 
-        android:layout_alignParentTop="true"
-    />
+            style="@style/ConversationActivity.Title"
+        />
+    </android.support.v7.widget.Toolbar>
 
     <Button
         android:id="@+id/send"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ConversationActivity.SendButton"
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-
-        android:text="send"
     />
 
     <EditText
         android:id="@+id/edit"
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ConversationActivity.EditText"
 
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/send"
@@ -39,10 +38,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages"
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        style="@style/ConversationActivity.MessageList"
 
         android:layout_above="@id/edit"
-        android:layout_below="@id/conversation_id"
+        android:layout_below="@id/toolbar"
     />
 </RelativeLayout>

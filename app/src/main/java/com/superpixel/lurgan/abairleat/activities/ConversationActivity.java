@@ -2,6 +2,8 @@ package com.superpixel.lurgan.abairleat.activities;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,8 +14,8 @@ import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.adapters.MessagesFirebaseRecyclerAdapter;
 import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.ConversationMetadataDTO;
-import com.superpixel.lurgan.abairleat.dto.FirebaseDTO;
 import com.superpixel.lurgan.abairleat.dto.MessageDTO;
+import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.annotations.AfterViews;
@@ -42,28 +44,25 @@ public class ConversationActivity extends BaseActivity {
     @Bean
     protected MessagesFirebaseRecyclerAdapter messagesAdapter;
 
-    @ViewById(R.id.conversation_id)
-    protected TextView conversationIdView;
+    @ViewById(R.id.toolbar)
+    protected Toolbar toolbarView;
+    @ViewById(R.id.title)
+    protected TextView titleView;
     @ViewById(R.id.edit)
     protected EditText editTextView;
     @ViewById(R.id.messages)
     protected RecyclerView messagesRecyclerView;
 
     private Firebase conversationFirebaseRef;
-
     private ConversationMetadataDTO metadataDTO;
 
-    @AfterViews
-    protected void afterViews() {
-        conversationIdView.setText(conversationId);
+    private String title;
 
-        messagesAdapter.setConversationId(conversationId);
+    @Override
+    protected void onStop() {
+        super.onStop();
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        messagesRecyclerView.setLayoutManager(layoutManager);
-        messagesRecyclerView.setAdapter(messagesAdapter);
+        messagesAdapter.destroy();
     }
 
     @AfterExtras
@@ -73,6 +72,25 @@ public class ConversationActivity extends BaseActivity {
         metadataDTO = new ConversationMetadataDTO();
 
         updateConversationMeta(metadataDTO);
+
+        generateTitle(metadataDTO);
+    }
+
+    @AfterViews
+    protected void afterViews() {
+
+        setSupportActionBar(toolbarView);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        messagesAdapter.initialize(conversationId);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        messagesRecyclerView.setLayoutManager(layoutManager);
+        messagesRecyclerView.setAdapter(messagesAdapter);
+
+        titleView.setText(title);
     }
 
     private void updateConversationMeta(ConversationMetadataDTO meta) {
@@ -88,6 +106,18 @@ public class ConversationActivity extends BaseActivity {
         meta.setParticipants(participants);
 
         conversationFirebaseRef.child("metadata").updateChildren(meta.toMap());
+    }
+
+    private void generateTitle(ConversationMetadataDTO meta) {
+        List<String> participants = new ArrayList<>();
+
+        for(String participant : meta.getParticipants()) {
+            if(participant.equals(api.getProfile().getId()) == false) {
+                participants.add(ProfileCache.get(participant).getFirstName());
+            }
+        }
+
+        title = TextUtils.join(",", participants);
     }
 
     private void sendMessage(String message) {
@@ -125,7 +155,7 @@ public class ConversationActivity extends BaseActivity {
 
         for(String participantId : metadataDTO.getParticipants()) {
             api.firebaseForUser(participantId)
-                    .child("conversation-metadata")
+                    .child("conversations-metadata")
                     .setValue(metadataDTO.generateProfileMetaLinkMap());
         }
     }

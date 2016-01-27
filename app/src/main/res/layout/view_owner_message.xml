@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+>
+    <ImageView
+        android:id="@+id/profile_image"
+
+        style="@style/OwnerMessageView.Image"
+
+        android:layout_alignParentLeft="true"
+    />
+
+    <TextView
+        android:id="@+id/message"
+
+        style="@style/OwnerMessageView.Text"
+
+        android:layout_toRightOf="@id/profile_image"
+
+        android:text="@string/lorem_ipsum"
+    />
+
+    <TextView
+        android:id="@+id/date"
+
+        style="@style/OwnerMessageView.Date"
+
+        android:layout_alignLeft="@id/message"
+        android:layout_below="@id/message"
+    />
+</merge>

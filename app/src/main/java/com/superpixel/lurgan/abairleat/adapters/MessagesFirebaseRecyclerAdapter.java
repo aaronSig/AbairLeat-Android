@@ -7,8 +7,9 @@ import com.firebase.client.Query;
 import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.MessageDTO;
 import com.superpixel.lurgan.abairleat.util.ViewWrapper;
-import com.superpixel.lurgan.abairleat.views.MessageElementView;
-import com.superpixel.lurgan.abairleat.views.MessageElementView_;
+import com.superpixel.lurgan.abairleat.views.MessageView;
+import com.superpixel.lurgan.abairleat.views.OwnerMessageView_;
+import com.superpixel.lurgan.abairleat.views.ParticipantMessageView_;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -18,7 +19,10 @@ import org.androidannotations.annotations.RootContext;
  * Created by Martin on 1/25/16.
  */
 @EBean
-public class MessagesFirebaseRecyclerAdapter extends FirebaseRecyclerAdapter<MessageDTO, MessageElementView> {
+public class MessagesFirebaseRecyclerAdapter extends FirebaseRecyclerAdapter<MessageDTO, MessageView> {
+
+    public static final int VIEW_TYPE_MESSAGE_OWNER = 0;
+    public static final int VIEW_TYPE_MESSAGE_PARTICIPANT = 1;
 
     @RootContext
     protected Context context;
@@ -26,8 +30,10 @@ public class MessagesFirebaseRecyclerAdapter extends FirebaseRecyclerAdapter<Mes
     @Bean
     protected API api;
 
-    public void setConversationId(String conversationId) {
-        Query query = api.firebaseForConversation(conversationId).child("messages").orderByPriority();
+    private Query query;
+
+    public void initialize(String conversationId) {
+        query = api.firebaseForConversation(conversationId).child("messages").orderByPriority();
         query.keepSynced(true);
 
         // TODO: 1/25/16 might wanna get rid of the second param ...
@@ -35,13 +41,31 @@ public class MessagesFirebaseRecyclerAdapter extends FirebaseRecyclerAdapter<Mes
     }
 
     @Override
-    protected MessageElementView onCreateItemView(ViewGroup parent, int viewType) {
-        return MessageElementView_.build(context);
+    protected MessageView onCreateItemView(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            default:
+            case VIEW_TYPE_MESSAGE_OWNER:
+                return OwnerMessageView_.build(context);
+
+            case VIEW_TYPE_MESSAGE_PARTICIPANT:
+                return ParticipantMessageView_.build(context);
+
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewWrapper<MessageElementView> holder, int position) {
+    public void onBindViewHolder(ViewWrapper<MessageView> holder, int position) {
         holder.getView().bind(getItem(position));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if(getItem(position).getAuthor().equals(api.getProfile().getId())) {
+            return VIEW_TYPE_MESSAGE_OWNER;
+        }
+
+        return VIEW_TYPE_MESSAGE_PARTICIPANT;
     }
 
     @Override
