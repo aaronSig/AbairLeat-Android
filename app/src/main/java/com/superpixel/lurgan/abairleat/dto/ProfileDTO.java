@@ -16,6 +16,8 @@ public class ProfileDTO extends FirebaseDTO {
     private String lastName;
     private String avatarUrlString;
 
+    private String androidNotificationToken;
+
     public ProfileDTO() {}
 
     public ProfileDTO(String id, String name, String firstName, String lastName, String avatarUrlString) {
@@ -24,6 +26,16 @@ public class ProfileDTO extends FirebaseDTO {
         this.firstName = firstName;
         this.lastName = lastName;
         this.avatarUrlString = avatarUrlString;
+    }
+
+    public ProfileDTO(String id, String name, String firstName, String lastName, String avatarUrlString, String androidNotificationToken) {
+        this.id = id;
+        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.avatarUrlString = avatarUrlString;
+
+        this.androidNotificationToken = androidNotificationToken;
     }
 
     public String getId() {
@@ -66,6 +78,14 @@ public class ProfileDTO extends FirebaseDTO {
         this.avatarUrlString = avatarUrlString;
     }
 
+    public String getAndroidNotificationToken() {
+        return androidNotificationToken;
+    }
+
+    public void setAndroidNotificationToken(String androidNotificationToken) {
+        this.androidNotificationToken = androidNotificationToken;
+    }
+
     @Override
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> vals = new HashMap<>(5);
@@ -75,6 +95,8 @@ public class ProfileDTO extends FirebaseDTO {
         vals.put("firstName", getFirstName());
         vals.put("lastName", getLastName());
         vals.put("avatarUrlString", getAvatarUrlString());
+
+        vals.put("androidNotificationToken", getAndroidNotificationToken());
 
         return vals;
     }
@@ -89,7 +111,9 @@ public class ProfileDTO extends FirebaseDTO {
                 getStringNullSafe(profile, "first_name"),
                 getStringNullSafe(profile, "last_name"),
 
-                getPictureUrlNullSafe(profile)
+                getPictureUrlNullSafe(profile),
+
+                getStringNullSafe(profile, "android")
         );
     }
 

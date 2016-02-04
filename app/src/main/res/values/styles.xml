@@ -3,9 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="android:textColorPrimary">@color/primary_text</item>
 
         <item name="android:windowBackground">@color/window_background</item>
     </style>
@@ -15,6 +17,19 @@
         <item name="android:layout_height">?attr/actionBarSize</item>
 
         <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <!--
+        DashboardActivity
+    -->
+    <style name="DashboardActivity"></style>
+    <style name="DashboardActivity.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textSize">28dp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <!--
@@ -124,9 +139,12 @@
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
 
+        <item name="android:background">@color/white</item>
+
         <item name="android:gravity">center</item>
 
         <item name="android:textSize">14dp</item>
+        <item name="android:text">@string/unknown</item>
     </style>
 
     <!--
@@ -215,8 +233,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
 
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
         <item name="android:layout_marginBottom">4dp</item>
 
         <item name="android:textSize">6dp</item>
@@ -240,6 +258,63 @@
 
     <style name="ParticipantMessageView.Date" parent="@style/OwnerMessageView.Date">
         <item name="android:gravity">right</item>
+    </style>
+
+    <!--
+        ConversationsView
+    -->
+    <style name="ConversationsView"></style>
+    <style name="ConversationsView.ConversationsList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+    </style>
+
+    <!--
+        ConversationElementView
+    -->
+    <style name="ConversationElementView"></style>
+    <style name="ConversationElementView.ParticipantImage">
+        <item name="android:layout_width">52dp</item>
+        <item name="android:layout_height">52dp</item>
+
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="ConversationElementView.Date">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="ConversationElementView.ParticipantName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_marginLeft">16dp</item>
+
+        <item name="android:ellipsize">end</item>
+
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ConversationElementView.Message">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+
+        <item name="android:textSize">14dp</item>
+        <item name="android:gravity">center_vertical|left</item>
     </style>
 
 </resources>

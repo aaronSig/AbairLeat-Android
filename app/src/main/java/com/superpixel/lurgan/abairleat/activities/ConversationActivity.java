@@ -1,20 +1,25 @@
 package com.superpixel.lurgan.abairleat.activities;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.adapters.MessagesFirebaseRecyclerAdapter;
 import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.ConversationMetadataDTO;
 import com.superpixel.lurgan.abairleat.dto.MessageDTO;
+import com.superpixel.lurgan.abairleat.services.NotificationService;
 import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import org.androidannotations.annotations.AfterExtras;
@@ -24,11 +29,14 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.TextChange;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Martin on 1/25/16.
@@ -43,6 +51,8 @@ public class ConversationActivity extends BaseActivity {
     protected API api;
     @Bean
     protected MessagesFirebaseRecyclerAdapter messagesAdapter;
+    @Bean
+    protected NotificationService notificationService;
 
     @ViewById(R.id.toolbar)
     protected Toolbar toolbarView;
@@ -50,6 +60,8 @@ public class ConversationActivity extends BaseActivity {
     protected TextView titleView;
     @ViewById(R.id.edit)
     protected EditText editTextView;
+    @ViewById(R.id.send)
+    protected Button sendButtonView;
     @ViewById(R.id.messages)
     protected RecyclerView messagesRecyclerView;
 
@@ -57,6 +69,18 @@ public class ConversationActivity extends BaseActivity {
     private ConversationMetadataDTO metadataDTO;
 
     private String title;
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(conversationId != null) {
+            notificationService.clearNotification(conversationId);
+        }
+
+    }
 
     @Override
     protected void onStop() {
@@ -69,11 +93,9 @@ public class ConversationActivity extends BaseActivity {
     protected void afterExtras() {
         conversationFirebaseRef = api.firebaseForConversation(conversationId);
 
-        metadataDTO = new ConversationMetadataDTO();
+        notificationService.clearNotification(conversationId);
 
-        updateConversationMeta(metadataDTO);
-
-        generateTitle(metadataDTO);
+        setInitialConversationMeta();
     }
 
     @AfterViews
@@ -86,11 +108,35 @@ public class ConversationActivity extends BaseActivity {
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setStackFromEnd(true);
 
         messagesRecyclerView.setLayoutManager(layoutManager);
         messagesRecyclerView.setAdapter(messagesAdapter);
 
-        titleView.setText(title);
+        setTitle(title);
+    }
+
+    private void setInitialConversationMeta() {
+
+        conversationFirebaseRef.child("metadata").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    metadataDTO = dataSnapshot.getValue(ConversationMetadataDTO.class);
+                } else {
+                    metadataDTO = new ConversationMetadataDTO();
+                    updateConversationMeta(metadataDTO);
+                }
+
+                title = generateTitle(metadataDTO);
+                setTitle(title);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                log(Log.ERROR, firebaseError.toString());
+            }
+        });
     }
 
     private void updateConversationMeta(ConversationMetadataDTO meta) {
@@ -108,7 +154,7 @@ public class ConversationActivity extends BaseActivity {
         conversationFirebaseRef.child("metadata").updateChildren(meta.toMap());
     }
 
-    private void generateTitle(ConversationMetadataDTO meta) {
+    private String generateTitle(ConversationMetadataDTO meta) {
         List<String> participants = new ArrayList<>();
 
         for(String participant : meta.getParticipants()) {
@@ -117,37 +163,46 @@ public class ConversationActivity extends BaseActivity {
             }
         }
 
-        title = TextUtils.join(",", participants);
+        return TextUtils.join(",", participants);
     }
 
     private void sendMessage(String message) {
 
-        Date now = new Date(System.currentTimeMillis());
+        final Date now = new Date(System.currentTimeMillis());
 
         // create and send the message
+        final MessageDTO messageDto = new MessageDTO(api.getProfile().getId(), now, message);
 
-        MessageDTO messageDto = new MessageDTO(api.getProfile().getId(), now, message);
+        updateSendingStatus(true, false);
 
         Firebase messageRef = conversationFirebaseRef.child("messages").push();
-
         messageRef.setValue(
                 messageDto.toMap(),
-                String.valueOf(now.getTime()),
+//                String.valueOf(API.getCurrentGmtMillis()),
 
                 new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        Toast.makeText(getApplicationContext(), "sent", Toast.LENGTH_SHORT).show();
+                        if(firebaseError == null) {
+                            afterMessageSent(messageDto, now);
+                            updateSendingStatus(false, true);
+                        } else {
+                            Snackbar.make(editTextView, firebaseError.toString(), Snackbar.LENGTH_LONG).show();
+                            updateSendingStatus(false, false);
+                        }
+
                     }
                 }
         );
+    }
 
+    private void afterMessageSent(MessageDTO message, Date dateSent) {
         // update meta
 
-        metadataDTO.setLastMessageSent(message);
+        metadataDTO.setLastMessageSent(message.getText());
         metadataDTO.setLastSenderName(api.getProfile().getName());
         metadataDTO.setLastSenderAvatarUrl(api.getProfile().getAvatarUrlString());
-        metadataDTO.setDateLastMessageSent(now);
+        metadataDTO.setDateLastMessageSent(dateSent);
 
         updateConversationMeta(metadataDTO);
 
@@ -156,9 +211,33 @@ public class ConversationActivity extends BaseActivity {
         for(String participantId : metadataDTO.getParticipants()) {
             api.firebaseForUser(participantId)
                     .child("conversations-metadata")
-                    .setValue(metadataDTO.generateProfileMetaLinkMap());
+                    .child(API.linkify(metadataDTO))
+                    .setValue(true, 0L-API.getCurrentGmtMillis());
         }
     }
+
+    @UiThread
+    protected void setTitle(String title) {
+        if(title != null) {
+            titleView.setText(title);
+        }
+    }
+
+    @UiThread
+    protected void updateSendingStatus(boolean sending, boolean clearText) {
+        if(clearText) {
+            editTextView.setText("");
+        }
+
+        if(sending) {
+            sendButtonView.setEnabled(false);
+            editTextView.setEnabled(false);
+        } else {
+            sendButtonView.setEnabled(true);
+            editTextView.setEnabled(true);
+        }
+    }
+
 
     @TextChange(R.id.edit)
     protected void validateMessage() {
@@ -171,7 +250,7 @@ public class ConversationActivity extends BaseActivity {
         // validation
         String text = editTextView.getText().toString();
         sendMessage(text);
-        editTextView.setText("");
+//        editTextView.setText("");
     }
 
 

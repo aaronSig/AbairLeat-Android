@@ -16,6 +16,7 @@ import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.AuthStatus;
 import com.superpixel.lurgan.abairleat.dto.ProfileDTO;
+import com.superpixel.lurgan.abairleat.gcm.GcmRegistrationService;
 import com.superpixel.lurgan.abairleat.services.FriendsService;
 import com.superpixel.lurgan.abairleat.services.ProfileService;
 
@@ -41,6 +42,8 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
     protected ProfileService profileService;
     @Bean
     protected FriendsService friendsService;
+    @Bean
+    protected GcmRegistrationService gcmRegistrationService;
     @Bean
     protected API api;
 
@@ -97,9 +100,12 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
 
     private void loginComplete() {
         friendsService.sync();
+
         api.loadProfile(new API.InitializationCallback() {
             @Override
             public void onInitializationCompleted(ProfileDTO profile) {
+                gcmRegistrationService.register();
+
                 DashboardActivity_.intent(LoginActivity.this).start();
                 finish();
             }

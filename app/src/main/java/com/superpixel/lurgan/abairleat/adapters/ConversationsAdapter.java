@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import com.firebase.client.Query;
 import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.util.ViewWrapper;
-import com.superpixel.lurgan.abairleat.views.ContactsElementView;
-import com.superpixel.lurgan.abairleat.views.ContactsElementView_;
+import com.superpixel.lurgan.abairleat.views.ConversationElementView;
+import com.superpixel.lurgan.abairleat.views.ConversationElementView_;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -15,10 +15,10 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 /**
- * Created by Martin on 1/25/16.
+ * Created by Martin on 1/28/16.
  */
 @EBean
-public class ContactsFirebaseRecyclerAdapter extends FirebaseRecyclerAdapter<String, ContactsElementView> {
+public class ConversationsAdapter extends FirebaseRecyclerAdapter<String, ConversationElementView> {
 
     @RootContext
     protected Context context;
@@ -28,22 +28,20 @@ public class ContactsFirebaseRecyclerAdapter extends FirebaseRecyclerAdapter<Str
 
     @AfterInject
     protected void init() {
-        Query query = api.firebaseForCurrentUser().child("contacts").orderByPriority();
+        Query query = api.firebaseForCurrentUser().child("conversations-metadata").orderByPriority();
         query.keepSynced(true);
 
-        // TODO: 1/25/16 might wanna get rid of the second param ...
         bind(query, String.class);
     }
 
     @Override
-    protected ContactsElementView onCreateItemView(ViewGroup parent, int viewType) {
-        return ContactsElementView_.build(context);
+    protected ConversationElementView onCreateItemView(ViewGroup parent, int viewType) {
+        return ConversationElementView_.build(context);
     }
 
     @Override
-    public void onBindViewHolder(ViewWrapper<ContactsElementView> holder, int position) {
-        holder.getView().bind(getItem(position), getKey(position));
-
+    public void onBindViewHolder(ViewWrapper<ConversationElementView> holder, int position) {
+        holder.getView().bind(getKey(position));
     }
 
     @Override

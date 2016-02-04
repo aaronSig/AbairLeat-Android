@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 'Google Inc.:Google APIs:23'
@@ -8,19 +9,59 @@ android {
     defaultConfig {
         applicationId "com.superpixel.lurgan.abairleat"
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
 
         minSdkVersion 16
         targetSdkVersion 23
+    }
+
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+            keyAlias properties.getProperty("signing.keyAlias")
+            keyPassword properties.getProperty("signing.keyPassword")
+            storePassword properties.getProperty("signing.storePassword")
+
+            storeFile rootProject.file('cert_abairleat.jks')
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+
+                def appName;
+                if(project.hasProperty("applicationName")) {
+                    appName = applicationName
+                } else {
+                    appName = parent.name
+                }
+
+                variant.outputs.each { output ->
+                    def newApkName
+                    if(output.zipAlign) {
+                        newApkName = "${appName}-${output.baseName}-${variant.versionName}.apk"
+                    } else {
+                        newApkName = "${appName}-${output.baseName}-${variant.versionName}-unaligned.apk"
+                    }
+                    output.outputFile = new File(output.outputFile.parent, newApkName)
+                }
+            }
+        }
+
+        debug {
+            minifyEnabled false
+
+            signingConfig signingConfigs.release
         }
     }
-
 
 }
 
@@ -31,8 +72,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.1.+'
     compile 'com.android.support:design:23.1.+'
-    compile 'com.android.support:support-v4:23.1.+'
-    compile 'com.android.support:palette-v7:23.1.+'
+
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+
 
     // android annotations
     apt ('org.androidannotations:androidannotations:4.0-SNAPSHOT')
@@ -44,6 +86,12 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
 
     compile 'com.github.bumptech.glide:glide:3.6.1'
+
+    compile 'io.realm:realm-android:0.87.4'
+
+
+    compile 'com.facebook.stetho:stetho:1.3.0'
+
 }
 
 repositories {

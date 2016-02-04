@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">Abair Leat</string>
     <string name="facebook_app_id">542516285902988</string>
+    <string name="gcm_sender_id">324011265955</string>
 
     <string name="connect_with_facebook">Connect with Facebook</string>
 
-    <string name="contacts">Contacts</string>
-    <string name="conversations">Conversations</string>
-    <string name="profile">Profile</string>
+    <string name="contacts">Cairde</string>
+    <string name="conversations">Comhraítí</string>
+    <string name="profile">Sonraí</string>
 
     <string name="send">Send</string>
     <string name="new_message">New Message</string>
@@ -20,6 +21,7 @@
     <string name="name">Name</string>
     <string name="id">ID</string>
     <string name="provider">provider</string>
+    <string name="unknown">Unknown</string>
     <string name="log_out">Log Out</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ut venenatis metus, id egestas dolor. Nunc rutrum magna vel lorem mattis commodo. Praesent eleifend rhoncus eros, vel sollicitudin lectus molestie a. Ut sit amet imperdiet risus. Integer semper elit id ultrices placerat. Etiam eleifend mauris ex, sed rhoncus nibh tempus nec. Proin eu porttitor turpis. In mollis velit vel quam hendrerit, ut ullamcorper lacus maximus. Suspendisse non est nisl. Mauris eget justo aliquet, sollicitudin diam vel, cursus nulla. Vestibulum a tincidunt erat, nec imperdiet ex. Suspendisse vitae gravida ex. Vivamus nec dictum ex. Donec mi ipsum, suscipit sit amet semper.</string>

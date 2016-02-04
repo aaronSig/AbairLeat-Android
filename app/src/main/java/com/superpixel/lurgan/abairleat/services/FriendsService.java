@@ -98,16 +98,21 @@ public class FriendsService {
     }
 
     private void updateProfile(final ProfileDTO profile) {
-        api.updateProfile(profile, new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                Log.e(LOG_TAG, "Profile updated");
-                updateContact(profile);
-            }
-        });
+        Log.d(LOG_TAG, "updateProfile");
+        api.updateProfile(
+                profile,
+                new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        Log.e(LOG_TAG, "Profile updated");
+                        updateContact(profile);
+                    }
+                }
+        );
     }
 
     private void updateContact(ProfileDTO contact) {
+        Log.d(LOG_TAG, "updateContact");
         api.updateContact(contact, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {

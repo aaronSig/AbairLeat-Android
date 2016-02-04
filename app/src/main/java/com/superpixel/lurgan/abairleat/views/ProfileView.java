@@ -101,7 +101,13 @@ public class ProfileView extends ScrollView {
     private void inflateDetails(ProfileDTO profile) {
         nameView.setText(profile.getName());
         idView.setText(profile.getId());
-        providerView.setText(api.getAuthData().getProvider());
+
+        try {
+            providerView.setText(api.getAuthData().getProvider());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @UiThread

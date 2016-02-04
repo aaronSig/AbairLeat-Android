@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+    <ImageView
+        android:id="@+id/participant_image"
+
+        style="@style/ConversationElementView.ParticipantImage"
+
+        tools:background="@color/colorAccent"
+    />
+
+    <TextView
+        android:id="@+id/date"
+
+        style="@style/ConversationElementView.Date"
+
+        android:layout_alignTop="@id/participant_image"
+        android:layout_alignBottom="@+id/participant_name"
+        android:layout_alignParentRight="true"
+
+        tools:text="28/01/2015"
+    />
+
+    <TextView
+        android:id="@+id/participant_name"
+
+        style="@style/ConversationElementView.ParticipantName"
+
+        android:layout_alignTop="@id/participant_image"
+        android:layout_toRightOf="@id/participant_image"
+        android:layout_toLeftOf="@id/date"
+
+        tools:text="Aaron Signorelli"
+    />
+
+    <TextView
+        android:id="@+id/message"
+
+        style="@style/ConversationElementView.Message"
+
+        android:layout_alignLeft="@id/participant_name"
+        android:layout_below="@id/participant_name"
+        android:layout_alignBottom="@id/participant_image"
+
+        tools:text="Lorem ipsum"
+    />
+</RelativeLayout>

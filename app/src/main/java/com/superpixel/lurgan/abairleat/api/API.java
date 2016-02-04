@@ -8,6 +8,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.dto.ConversationMetadataDTO;
 import com.superpixel.lurgan.abairleat.dto.ProfileDTO;
 
@@ -15,7 +18,10 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Created by Martin on 1/21/16.
@@ -25,7 +31,8 @@ public class API {
 
     private static String LOG_TAG = "API";
 
-    private static String API_VERSION = "v1-android";
+//    private static String API_VERSION = "v1-android";
+    private static String API_VERSION = "v1";
     private static String API_URL = "https://abair-leat.firebaseio.com/";
 
     private Firebase firebase;
@@ -113,7 +120,7 @@ public class API {
             if(path[1].equals("profiles")) {
                 return firebaseForUser(path[2]);
             } else if (path[1].equals("conversations")) {
-                return firebaseForConversation(path[2]);
+                return firebaseForConversation(path[2]).child("metadata");
             }
         }
 
@@ -144,6 +151,10 @@ public class API {
 
     public AuthData getAuthData() {
         return firebaseVersioned().getAuth();
+    }
+
+    public void setGcmToken(String token) {
+        firebaseForCurrentUser().child("androidNotificationToken").setValue(token);
     }
 
     /*
@@ -213,16 +224,27 @@ public class API {
      * HELPER METHODS
      */
     public static String linkify(ProfileDTO profile) {
-        return String.format("@link>profiles>%s", profile.getId());
+        return linkifyProfile(profile.getId());
+    }
+
+    public static String linkifyProfile(String id) {
+        return String.format("@link>profiles>%s", id);
     }
 
     public static String linkify(ConversationMetadataDTO conversationMeta) {
+        return linkifyConversation(conversationMeta.getConversationId());
+    }
+
+    public static String linkifyConversation(String conversationId) {
         return String.format(
                 "@link>conversations>%s>metadata",
-                conversationMeta.getConversationId()
+                conversationId
         );
     }
 
+    public static long getCurrentGmtMillis() {
+        return Calendar.getInstance(TimeZone.getTimeZone("gmt")).getTimeInMillis();
+    }
 
     /*
      * INITIALIZATION CALLBACK

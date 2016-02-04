@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
+import com.facebook.stetho.Stetho;
 import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.adapters.DashboardPagerAdapter;
 import com.superpixel.lurgan.abairleat.api.API;
@@ -40,6 +41,8 @@ public class DashboardActivity extends BaseActivity {
         contentSetup();
 
         ProfileCache.init(api);
+
+        Stetho.initializeWithDefaults(this);
     }
 
     @Override
@@ -48,7 +51,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void toolbarSetup() {
-        setSupportActionBar(toolbarView);
+//        setSupportActionBar(toolbarView);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void contentSetup() {

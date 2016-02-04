@@ -1,6 +1,7 @@
 package com.superpixel.lurgan.abairleat.views;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,13 +15,15 @@ import com.superpixel.lurgan.abairleat.util.CropCircleTransformation;
 import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Martin on 1/26/16.
  */
 public abstract class MessageView extends RelativeLayout {
 
-    private SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private SimpleDateFormat defaultDateFormat = new SimpleDateFormat("dd MM yyyy");
+    private SimpleDateFormat shortDateFormat = new SimpleDateFormat("HH:mm");
 
     public MessageView(Context context) {
         super(context);
@@ -54,7 +57,11 @@ public abstract class MessageView extends RelativeLayout {
         }
 
         if(showDate()) {
-            getDateTextView().setText(getDateFormat().format(messageDTO.getDate()));
+            getDateTextView().setText(
+                    shouldUseLongDate(messageDTO.getDate())
+                            ? getDateFormat().format(messageDTO.getDate())
+                            : getShortDateFormat().format(messageDTO.getDate())
+            );
         }
 
         getTextProcessor().insert(messageDTO.getText(), getMessageTextView());
@@ -72,6 +79,10 @@ public abstract class MessageView extends RelativeLayout {
         return defaultDateFormat;
     }
 
+    public SimpleDateFormat getShortDateFormat() {
+        return shortDateFormat;
+    }
+
     public ChatTextProcessor getTextProcessor() {
         return new ChatTextProcessor() {
             @Override
@@ -79,6 +90,10 @@ public abstract class MessageView extends RelativeLayout {
                 textView.setText(text);
             }
         };
+    }
+
+    public boolean shouldUseLongDate(Date date) {
+        return !DateUtils.isToday(date.getTime());
     }
 
     public abstract TextView getMessageTextView();
