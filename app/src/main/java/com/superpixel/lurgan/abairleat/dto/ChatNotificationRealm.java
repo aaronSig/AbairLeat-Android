@@ -7,7 +7,7 @@ import io.realm.RealmObject;
 /**
  * Created by Martin on 2/3/16.
  */
-public class ChatNotificationDTO extends RealmObject {
+public class ChatNotificationRealm extends RealmObject {
 
     public static final int NOTIFICATION_ID = 0x10100001;
 
@@ -18,9 +18,9 @@ public class ChatNotificationDTO extends RealmObject {
 
     private RealmList<StringRealmObject> messages = new RealmList<>();
 
-    public ChatNotificationDTO() {}
+    public ChatNotificationRealm() {}
 
-    public ChatNotificationDTO(String title, String lastMessage, String conversationId, String userId) {
+    public ChatNotificationRealm(String title, String lastMessage, String conversationId, String userId) {
         this.userId = userId;
         this.title = title;
         this.lastMessage = lastMessage;

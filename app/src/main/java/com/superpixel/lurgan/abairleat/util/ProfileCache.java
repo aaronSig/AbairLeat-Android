@@ -32,7 +32,7 @@ public class ProfileCache {
     }
 
     public static void remove(String id) {
-        cache.remove(id);
+
     }
 
     public static void init(final API api) {

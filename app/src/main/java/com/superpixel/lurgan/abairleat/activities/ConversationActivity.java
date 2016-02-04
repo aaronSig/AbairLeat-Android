@@ -20,6 +20,7 @@ import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.ConversationMetadataDTO;
 import com.superpixel.lurgan.abairleat.dto.MessageDTO;
 import com.superpixel.lurgan.abairleat.services.NotificationService;
+import com.superpixel.lurgan.abairleat.services.ContactCacheService;
 import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import org.androidannotations.annotations.AfterExtras;
@@ -33,10 +34,8 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by Martin on 1/25/16.

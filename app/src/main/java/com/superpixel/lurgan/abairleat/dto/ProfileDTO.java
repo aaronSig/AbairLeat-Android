@@ -137,6 +137,34 @@ public class ProfileDTO extends FirebaseDTO {
         return "";
     }
 
+    public static ProfileDTO fromRealm(ProfileRealm profileRealm) {
+        ProfileDTO profile = new ProfileDTO();
+
+        profile.setId(profileRealm.getId());
+        profile.setName(profileRealm.getName());
+        profile.setFirstName(profileRealm.getFirstName());
+        profile.setLastName(profileRealm.getLastName());
+        profile.setAvatarUrlString(profileRealm.getAvatarUrlString());
+        profile.setAndroidNotificationToken(profileRealm.getAndroidNotificationToken());
+
+        return profile;
+    }
+
+    public ProfileRealm toRealm(ProfileRealm profileRealm) {
+        if(profileRealm == null) {
+            profileRealm = new ProfileRealm();
+        }
+
+        profileRealm.setId(getId());
+        profileRealm.setName(getName());
+        profileRealm.setFirstName(getFirstName());
+        profileRealm.setLastName(getLastName());
+        profileRealm.setAvatarUrlString(getAvatarUrlString());
+        profileRealm.setAndroidNotificationToken(getAndroidNotificationToken());
+
+        return profileRealm;
+    }
+
     @Override
     public String toString() {
         return "ProfileDTO{" +

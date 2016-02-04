@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Martin on 1/25/16.
  */

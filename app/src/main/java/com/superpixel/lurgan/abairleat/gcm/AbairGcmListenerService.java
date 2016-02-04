@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.superpixel.lurgan.abairleat.dto.ChatNotificationDTO;
+import com.superpixel.lurgan.abairleat.dto.ChatNotificationRealm;
 import com.superpixel.lurgan.abairleat.services.NotificationService;
 
 import org.androidannotations.annotations.Bean;
@@ -37,7 +37,7 @@ public class AbairGcmListenerService extends GcmListenerService {
         Log.e(LOG_TAG, "# message: " + data.getString("message"));
         Log.e(LOG_TAG, "# type:    " + data.getString("notificationType"));
 
-        ChatNotificationDTO notification = notificationService.generateChatNotification(
+        ChatNotificationRealm notification = notificationService.generateChatNotification(
                 data.getString("title"),
                 data.getString("message"),
                 data.getString("conversationId"),

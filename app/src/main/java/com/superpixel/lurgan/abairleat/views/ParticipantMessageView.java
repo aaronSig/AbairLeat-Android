@@ -3,14 +3,10 @@ package com.superpixel.lurgan.abairleat.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.superpixel.lurgan.abairleat.R;
 import com.superpixel.lurgan.abairleat.api.API;
-import com.superpixel.lurgan.abairleat.dto.MessageDTO;
-import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;

@@ -12,6 +12,7 @@ import com.superpixel.lurgan.abairleat.api.API;
 import com.superpixel.lurgan.abairleat.dto.MessageDTO;
 import com.superpixel.lurgan.abairleat.dto.ProfileDTO;
 import com.superpixel.lurgan.abairleat.util.CropCircleTransformation;
+import com.superpixel.lurgan.abairleat.services.ContactCacheService;
 import com.superpixel.lurgan.abairleat.util.ProfileCache;
 
 import java.text.SimpleDateFormat;

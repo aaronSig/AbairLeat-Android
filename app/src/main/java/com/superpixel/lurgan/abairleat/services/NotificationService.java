@@ -6,7 +6,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.superpixel.lurgan.abairleat.R;
-import com.superpixel.lurgan.abairleat.dto.ChatNotificationDTO;
+import com.superpixel.lurgan.abairleat.dto.ChatNotificationRealm;
 import com.superpixel.lurgan.abairleat.dto.StringRealmObject;
 
 import org.androidannotations.annotations.AfterInject;
@@ -33,7 +33,7 @@ public class NotificationService {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void showChatNotification(ChatNotificationDTO chatNotification) {
+    public void showChatNotification(ChatNotificationRealm chatNotification) {
 
         Log.d(LOG_TAG, "Showing notification: " + chatNotification.getConversationId());
 
@@ -44,17 +44,17 @@ public class NotificationService {
         );
     }
 
-    public ChatNotificationDTO generateChatNotification(String title, String message, String conversationId, String userId) {
+    public ChatNotificationRealm generateChatNotification(String title, String message, String conversationId, String userId) {
         Realm realm = Realm.getInstance(context);
 
-        ChatNotificationDTO notification = realm.where(ChatNotificationDTO.class).equalTo("conversationId", conversationId).findFirst();
+        ChatNotificationRealm notification = realm.where(ChatNotificationRealm.class).equalTo("conversationId", conversationId).findFirst();
 
         realm.beginTransaction();
 
         if(notification == null) {
             Log.d(LOG_TAG, "Creating new notification for " + conversationId);
 
-            notification = realm.createObject(ChatNotificationDTO.class);
+            notification = realm.createObject(ChatNotificationRealm.class);
 
             notification.setTitle(title);
             notification.setLastMessage(message);
@@ -79,10 +79,10 @@ public class NotificationService {
         Realm realm = Realm.getInstance(context);
 
         realm.beginTransaction();
-        realm.where(ChatNotificationDTO.class).equalTo("conversationId", conversationLink).findAll().clear();
+        realm.where(ChatNotificationRealm.class).equalTo("conversationId", conversationLink).findAll().clear();
         realm.commitTransaction();
 
-        notificationManager.cancel(conversationLink, ChatNotificationDTO.NOTIFICATION_ID);
+        notificationManager.cancel(conversationLink, ChatNotificationRealm.NOTIFICATION_ID);
     }
 
     public void clearAll() {
@@ -91,13 +91,13 @@ public class NotificationService {
         Realm realm = Realm.getInstance(context);
 
         realm.beginTransaction();
-        realm.where(ChatNotificationDTO.class).findAll().clear();
+        realm.where(ChatNotificationRealm.class).findAll().clear();
         realm.commitTransaction();
 
         notificationManager.cancelAll();
     }
 
-    private NotificationCompat.Builder toNotification(ChatNotificationDTO notification, Context context) {
+    private NotificationCompat.Builder toNotification(ChatNotificationRealm notification, Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
